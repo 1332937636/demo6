@@ -4,6 +4,9 @@ import React from 'react';
 
 const Comment = props => {
   const comment = props.comment;
+  if (!comment) {
+    return null;
+  }
   const show = props.currentUser &&
     props.currentUser.username === comment.author.username;
   return (
