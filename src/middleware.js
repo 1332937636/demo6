@@ -26,17 +26,21 @@ const promiseMiddleware = store => next => action => {
         store.dispatch(action);
       },
       error => {
-        const currentState = store.getState()
-        if (!skipTracking && currentState.viewChangeCounter !== currentView) {
-          return
+       try {
+          const currentState = store.getState()
+          if (!skipTracking && currentState.viewChangeCounter !== currentView) {
+            return
+          }
+          console.log('ERROR', error);
+          action.error = true;
+          action.payload = error.response.body;
+          if (!action.skipTracking) {
+            store.dispatch({ type: ASYNC_END, promise: action.payload });
+          }
+          store.dispatch(action);
+        } catch (error) {
+          console.log('ERROR IN CATCH', error);
         }
-        console.log('ERROR', error);
-        action.error = true;
-        action.payload = error.response.body;
-        if (!action.skipTracking) {
-          store.dispatch({ type: ASYNC_END, promise: action.payload });
-        }
-        store.dispatch(action);
       }
     );
 
