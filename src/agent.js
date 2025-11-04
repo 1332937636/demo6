@@ -6,7 +6,7 @@ const superagent = superagentPromise(_superagent, global.Promise);
 const API_ROOT = 'https://conduit.productionready.io/api';
 
 const encode = encodeURIComponent;
-const responseBody = res => res.body;
+const responseBody = res => (res ? res.body || {} : {});
 
 let token = null;
 const tokenPlugin = req => {
